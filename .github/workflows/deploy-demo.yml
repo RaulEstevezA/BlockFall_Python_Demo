@@ -1,0 +1,118 @@
+# Compila el juego para web y lo publica en la sección de demos de la web
+# personal: https://raulesteveza.github.io/demos/BlockFall_Python/
+#
+# Se publica en el repositorio RaulEstevezA/RaulEstevezA.github.io, que GitHub
+# Pages sirve al recibir el push:
+#   demos/BlockFall_Python/       ← showcase/ (página con la ventana de macOS)
+#   demos/BlockFall_Python/app/   ← el juego compilado con pygbag
+#
+# Mismo mecanismo que el resto de demos: un token con permiso de escritura
+# (Contents: Read and write) sobre RaulEstevezA.github.io, guardado en este
+# repositorio como secreto de Actions PORTFOLIO_DEPLOY_TOKEN.
+
+name: Deploy demo
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '*.py'
+      - 'music/**'
+      - 'web/**'
+      - 'showcase/**'
+      - 'tests/**'
+      - 'tool/**'
+      - 'requirements*.txt'
+      - '.github/workflows/deploy-demo.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-demo
+  cancel-in-progress: false
+
+env:
+  PYTHON_VERSION: '3.12'
+  SITE_REPOSITORY: RaulEstevezA/RaulEstevezA.github.io
+  DEMO_PATH: demos/BlockFall_Python
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Check deploy token
+        env:
+          PORTFOLIO_DEPLOY_TOKEN: ${{ secrets.PORTFOLIO_DEPLOY_TOKEN }}
+        run: |
+          if [ -z "$PORTFOLIO_DEPLOY_TOKEN" ]; then
+            echo "::error::Falta el secreto PORTFOLIO_DEPLOY_TOKEN (Settings → Secrets and variables → Actions)."
+            exit 1
+          fi
+
+      - name: Checkout game
+        uses: actions/checkout@v7
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: requirements-web.txt
+
+      - name: Install dependencies
+        run: pip install -r requirements-web.txt
+
+      - name: Test
+        run: python -m unittest discover tests -v
+
+      - name: Build web
+        run: ./tool/build_web.sh
+
+      - name: Assemble demo
+        run: |
+          mkdir -p dist
+          cp -R showcase/. dist/
+          cp -R build/blockfall/build/web dist/app
+
+      - name: Checkout site
+        uses: actions/checkout@v7
+        with:
+          repository: ${{ env.SITE_REPOSITORY }}
+          ref: main
+          token: ${{ secrets.PORTFOLIO_DEPLOY_TOKEN }}
+          path: site
+
+      - name: Copy build into site
+        run: |
+          mkdir -p "site/${DEMO_PATH}"
+          rsync -a --delete dist/ "site/${DEMO_PATH}/"
+
+      - name: Commit and push
+        working-directory: site
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "${DEMO_PATH}"
+          if git diff --cached --quiet; then
+            echo "Sin cambios en ${DEMO_PATH}"
+            exit 0
+          fi
+          git commit -m "deploy: actualizar ${DEMO_PATH} desde ${GITHUB_REPOSITORY}@${GITHUB_SHA::7}"
+
+          # Otras demos también publican en este repo:
+          # si el push falla por estar desactualizado, se actualiza y se reintenta.
+          for attempt in 1 2 3; do
+            git pull --rebase origin main
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+            if [ "$attempt" -lt 3 ]; then
+              echo "Intento $attempt fallido; reintentando tras actualizar main."
+              sleep 5
+            fi
+          done
+
+          echo "No se pudo publicar tras 3 intentos."
+          exit 1

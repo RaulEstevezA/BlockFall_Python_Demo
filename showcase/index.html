@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>BlockFall · Demo</title>
+  <meta name="description" content="Demo web de BlockFall, un juego de bloques que caen hecho en Python con Pygame y ejecutado en el navegador con WebAssembly." />
+  <meta name="theme-color" content="#0d1117" />
+  <link rel="canonical" href="https://raulesteveza.github.io/demos/BlockFall_Python/" />
+  <link rel="icon" type="image/png" href="app/favicon.png" />
+  <!--
+    Página de presentación de la demo. Se publica en demos/BlockFall_Python/ y el
+    juego compilado con pygbag en demos/BlockFall_Python/app/ (ver .github/workflows/deploy-demo.yml).
+    Estilos alineados con https://raulesteveza.github.io (css/styles.css), copiados
+    aquí para que la página no dependa de cambios en la web.
+  -->
+  <style>
+    :root {
+      --page-bg:    #0d1117;
+      --window-bg:  #161b22;
+      --text:       #e6edf3;
+      --muted:      #8b949e;
+      --accent:     #58a6ff;
+      --btn-bg:     #21262d;
+      --btn-text:   #c9d1d9;
+      --btn-hover:  #30363d;
+      --border:     #30363d;
+      --tag-bg:     #1a2740;
+      --tag-text:   #79c0ff;
+      --warn-bg:    rgba(210, 153, 34, 0.1);
+      --warn-border:#9e6a03;
+      --warn-text:  #e3b341;
+    }
+
+    :root { color-scheme: dark; }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    ::-webkit-scrollbar             { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track       { background: transparent; }
+    ::-webkit-scrollbar-thumb       { background: var(--border); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+
+    html, body { height: 100%; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--page-bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    ::selection { background: rgba(88, 166, 255, 0.25); color: var(--text); }
+
+    a { color: var(--accent); }
+
+    /* ---------- Cabecera (igual que la web) ---------- */
+
+    .container { max-width: 1100px; margin: 0 auto; padding: 1.5rem 2rem; }
+
+    .nav { display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+
+    .logo { color: var(--text); font-weight: 600; text-decoration: none; transition: opacity 0.15s; }
+    .logo:hover { opacity: 0.75; }
+
+    .lang { display: flex; gap: 0.5rem; }
+    .lang button {
+      background: none; border: 0; cursor: pointer; font: inherit;
+      color: var(--muted); font-size: 0.9rem; font-weight: 500;
+      padding: 2px 6px; border-radius: 4px; transition: color 0.15s;
+    }
+    .lang button[aria-pressed="true"] { color: var(--text); background: var(--btn-bg); }
+    .lang button:hover { color: var(--text); }
+
+    /* ---------- Escritorio: información + móvil ---------- */
+
+    .stage {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 3rem;
+      align-items: center;
+      padding-top: 0.5rem;
+      padding-bottom: 1.5rem;
+    }
+
+    .window {
+      background: var(--window-bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 1px 0 rgba(255, 255, 255, 0.04);
+      padding: 1.75rem 2.25rem;
+    }
+
+    h1 { font-size: 2.2rem; margin: 0 0 0.3rem; }
+    h2 { font-size: 1.2rem; font-weight: 400; color: var(--muted); margin: 0 0 1rem; }
+
+    .intro { margin: 0.75rem 0; line-height: 1.65; color: var(--muted); max-width: 560px; }
+
+    .tags { margin: 0.5rem 0 1.25rem; }
+    .tag {
+      display: inline-block; margin: 2px 3px 2px 0; padding: 3px 10px;
+      background: var(--tag-bg); color: var(--tag-text); border-radius: 20px;
+      font-size: 0.8rem; font-weight: 500;
+      font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+    }
+
+    .notice {
+      border: 1px solid var(--warn-border);
+      background: var(--warn-bg);
+      border-radius: 10px;
+      padding: 0.8rem 1.1rem;
+      margin: 1rem 0;
+      font-size: 0.92rem;
+      line-height: 1.6;
+    }
+    .notice strong { color: var(--warn-text); }
+    .notice ul { margin: 0.5rem 0 0; padding-left: 1.2rem; color: var(--btn-text); }
+    .notice li { margin-bottom: 0.25rem; }
+
+    .actions { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.25rem; }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      padding: 0.5rem 1rem;
+      background: var(--btn-bg); color: var(--btn-text);
+      border: 1px solid var(--border); border-radius: 8px;
+      text-decoration: none; font: inherit; font-weight: 500; font-size: 0.9rem;
+      cursor: pointer;
+      transition: background-color 0.15s ease, border-color 0.15s ease;
+    }
+    .btn:hover { background: var(--btn-hover); border-color: var(--muted); }
+    .btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .btn.primary { background: var(--accent); color: #0d1117; border-color: var(--accent); }
+    .btn.primary:hover { background: #79c0ff; border-color: #79c0ff; }
+
+    /* ---------- Ventana de macOS ---------- */
+
+    /* BlockFall es un juego de escritorio: en el ordenador se muestra dentro de
+       una ventana de macOS (modo oscuro) en vez de en un marco de móvil. */
+    /* La columna toma el ancho de la ventana; la ayuda se ajusta a ese ancho. */
+    .app-column { width: min-content; align-self: start; }
+
+    .mac-window {
+      border-radius: 11px;
+      overflow: hidden;
+      background: #000;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      box-shadow:
+        0 0 0 1px rgba(0, 0, 0, 0.6),
+        0 30px 80px rgba(0, 0, 0, 0.6),
+        0 10px 25px rgba(0, 0, 0, 0.35);
+    }
+
+    .titlebar {
+      position: relative;
+      height: 30px;
+      display: flex; align-items: center; justify-content: center;
+      background: linear-gradient(#3b3b3d, #2e2e30);
+      border-bottom: 1px solid #000;
+      user-select: none;
+    }
+    .titlebar .title { color: #d0d0d2; font-size: 13px; font-weight: 600; }
+
+    .traffic {
+      position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+      display: flex; gap: 8px;
+    }
+    .traffic span {
+      width: 12px; height: 12px; border-radius: 50%;
+      box-shadow: inset 0 0 0 0.5px rgba(0, 0, 0, 0.35);
+    }
+    .traffic .close    { background: #ff5f57; }
+    .traffic .minimize { background: #febc2e; }
+    .traffic .zoom     { background: #28c840; }
+
+    /* El juego es vertical (540 × 960): la ventana toma la altura disponible y
+       pygbag ajusta el lienzo al tamaño del iframe. */
+    .screen {
+      height: min(860px, calc(100dvh - 11rem));
+      aspect-ratio: 540 / 960;
+      background: #000;
+    }
+    .screen iframe { display: block; width: 100%; height: 100%; border: 0; background: #000; }
+
+    .hint { text-align: center; color: var(--muted); font-size: 0.82rem; margin-top: 0.9rem; }
+
+    /* ---------- Móvil real: la app a pantalla completa ---------- */
+
+    .mobile-only { display: none; }
+
+    @media (max-width: 760px), (max-height: 560px) {
+      body { overflow: hidden; }
+      header, .stage { display: none; }
+      .mobile-only { display: block; }
+
+      .fullscreen-app {
+        position: fixed; inset: 0;
+        width: 100vw; height: 100dvh;
+        border: 0; background: #000;
+      }
+
+      /* Botón de información, discreto en el borde derecho */
+      .info-fab {
+        position: fixed; right: 0; top: 50%; transform: translateY(-50%);
+        z-index: 2;
+        width: 30px; height: 52px;
+        border: 1px solid var(--border); border-right: 0;
+        border-radius: 12px 0 0 12px;
+        background: rgba(22, 27, 34, 0.85); color: var(--text);
+        font: 600 1rem/1 Georgia, serif; cursor: pointer;
+        backdrop-filter: blur(6px);
+      }
+
+      /* Hoja de información */
+      .sheet {
+        position: fixed; inset: auto 0 0 0; z-index: 3;
+        max-height: 88dvh; overflow-y: auto;
+        background: var(--window-bg);
+        border-top: 1px solid var(--border);
+        border-radius: 18px 18px 0 0;
+        padding: 1.25rem 1.25rem calc(1.25rem + env(safe-area-inset-bottom));
+        box-shadow: 0 -20px 60px rgba(0, 0, 0, 0.6);
+        transform: translateY(105%);
+        transition: transform 0.25s ease;
+      }
+      .sheet.open { transform: none; }
+      .sheet-backdrop {
+        position: fixed; inset: 0; z-index: 2;
+        background: rgba(1, 4, 9, 0.6);
+        opacity: 0; pointer-events: none; transition: opacity 0.25s ease;
+      }
+      .sheet-backdrop.open { opacity: 1; pointer-events: auto; }
+      .sheet h1 { font-size: 1.6rem; }
+      .sheet .grabber { width: 40px; height: 4px; border-radius: 2px; background: var(--border); margin: -0.25rem auto 1rem; }
+      .sheet .actions .btn { flex: 1 1 auto; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========== Escritorio ========== -->
+
+  <header class="container">
+    <nav class="nav">
+      <a class="logo" href="/">Raúl Estévez</a>
+      <div class="lang" role="group" aria-label="Idioma / Language">
+        <button type="button" data-lang="en">EN</button>
+        <button type="button" data-lang="es">ES</button>
+      </div>
+    </nav>
+  </header>
+
+  <main class="container stage">
+    <section class="window">
+      <!-- La ficha se rellena desde la plantilla #info para compartirla con la versión móvil. -->
+      <div data-info></div>
+    </section>
+
+    <div class="app-column">
+      <div class="mac-window">
+        <div class="titlebar">
+          <div class="traffic" aria-hidden="true">
+            <span class="close"></span><span class="minimize"></span><span class="zoom"></span>
+          </div>
+          <span class="title">BlockFall</span>
+        </div>
+        <div class="screen">
+          <iframe id="desktop-app" title="BlockFall" loading="eager" allow="autoplay; fullscreen"></iframe>
+        </div>
+      </div>
+      <p class="hint" data-i18n="hint">Haz clic en el juego y usa las flechas, Espacio y Esc. También puedes pulsar los botones con el ratón.</p>
+    </div>
+  </main>
+
+  <!-- ========== Móvil real ========== -->
+
+  <div class="mobile-only">
+    <iframe id="mobile-app" class="fullscreen-app" title="BlockFall" allow="autoplay; fullscreen"></iframe>
+    <button type="button" class="info-fab" aria-label="Información" data-open-sheet>i</button>
+    <div class="sheet-backdrop" data-close-sheet></div>
+    <aside class="sheet" aria-label="Información">
+      <div class="grabber"></div>
+      <div data-info></div>
+      <div class="actions">
+        <button type="button" class="btn primary" data-close-sheet data-i18n="view_demo">Ver la demo</button>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Ficha de la demo (común a escritorio y móvil) -->
+  <template id="info">
+    <h1>BlockFall</h1>
+    <h2 data-i18n="subtitle">Juego de bloques que caen, en Python</h2>
+
+    <div class="tags">
+      <span class="tag">Python</span>
+      <span class="tag">Pygame</span>
+      <span class="tag">pygbag</span>
+      <span class="tag">WebAssembly</span>
+    </div>
+
+    <p class="intro" data-i18n="intro">
+      Juego clásico de bloques que caen, programado desde cero con Pygame:
+      rotación con ajuste a las paredes, caída rápida, niveles que aceleran el
+      juego y puntuación según las líneas completadas. Es el mismo código Python
+      del juego de escritorio, ejecutándose en el navegador.
+    </p>
+
+    <div class="notice">
+      <strong data-i18n="notice_title">Versión web del juego</strong>
+      <ul>
+        <li data-i18n="notice_wasm">El juego se compila a WebAssembly con pygbag: la primera carga descarga el intérprete de Python y puede tardar unos segundos.</li>
+        <li data-i18n="notice_tap">Toca o haz clic en el juego para empezar; el navegador necesita ese gesto para activar la música.</li>
+        <li data-i18n="notice_controls">En el ordenador se juega con el teclado. En el móvil, con los botones bajo el tablero (mantén pulsadas las flechas para moverte más rápido).</li>
+      </ul>
+    </div>
+
+    <div class="actions">
+      <a class="btn primary" href="https://github.com/RaulEstevezA/tetrisInPython" target="_blank" rel="noopener" data-i18n="code">Código y descarga</a>
+      <a class="btn" href="app/" target="_blank" rel="noopener" data-i18n="fullscreen">Pantalla completa</a>
+      <a class="btn" href="https://raulesteveza.github.io/demos/" data-i18n="demos">Demos</a>
+    </div>
+  </template>
+
+  <script>
+    (function () {
+      var APP_URL = 'app/';
+
+      var texts = {
+        es: {
+          hint: 'Haz clic en el juego y usa las flechas, Espacio y Esc. También puedes pulsar los botones con el ratón.',
+          subtitle: 'Juego de bloques que caen, en Python',
+          intro: 'Juego clásico de bloques que caen, programado desde cero con Pygame: rotación con ajuste a las paredes, caída rápida, niveles que aceleran el juego y puntuación según las líneas completadas. Es el mismo código Python del juego de escritorio, ejecutándose en el navegador.',
+          notice_title: 'Versión web del juego',
+          notice_wasm: 'El juego se compila a WebAssembly con pygbag: la primera carga descarga el intérprete de Python y puede tardar unos segundos.',
+          notice_tap: 'Toca o haz clic en el juego para empezar; el navegador necesita ese gesto para activar la música.',
+          notice_controls: 'En el ordenador se juega con el teclado. En el móvil, con los botones bajo el tablero (mantén pulsadas las flechas para moverte más rápido).',
+          code: 'Código y descarga',
+          fullscreen: 'Pantalla completa',
+          demos: 'Demos',
+          view_demo: 'Jugar'
+        },
+        en: {
+          hint: 'Click the game and use the arrow keys, Space and Esc. You can also press the on-screen buttons with the mouse.',
+          subtitle: 'Falling blocks game, in Python',
+          intro: 'Classic falling blocks game built from scratch with Pygame: rotation with wall kicks, hard drop, levels that speed the game up and scoring based on cleared lines. It is the same Python code as the desktop game, running in the browser.',
+          notice_title: 'Web version of the game',
+          notice_wasm: 'The game is compiled to WebAssembly with pygbag: the first load downloads the Python interpreter and may take a few seconds.',
+          notice_tap: 'Tap or click the game to start; the browser needs that gesture to enable the music.',
+          notice_controls: 'On a computer you play with the keyboard. On a phone, with the buttons below the board (hold the arrows to move faster).',
+          code: 'Code & download',
+          fullscreen: 'Full screen',
+          demos: 'Demos',
+          view_demo: 'Play'
+        }
+      };
+
+      // --- Idioma: misma preferencia que la web (localStorage 'lang') ---
+
+      function readLang() {
+        try {
+          var stored = localStorage.getItem('lang');
+          if (stored === 'es' || stored === 'en') return stored;
+        } catch (e) {}
+        return (navigator.language || '').slice(0, 2).toLowerCase() === 'es' ? 'es' : 'en';
+      }
+
+      var lang = readLang();
+
+      function t(key) { return texts[lang][key] || texts.es[key] || key; }
+
+      function applyLang() {
+        document.documentElement.lang = lang;
+        document.querySelectorAll('[data-i18n]').forEach(function (el) {
+          el.textContent = t(el.dataset.i18n);
+        });
+        document.querySelectorAll('.lang button').forEach(function (button) {
+          button.setAttribute('aria-pressed', String(button.dataset.lang === lang));
+        });
+      }
+
+      document.querySelectorAll('.lang button').forEach(function (button) {
+        button.addEventListener('click', function () {
+          lang = button.dataset.lang;
+          try { localStorage.setItem('lang', lang); } catch (e) {}
+          applyLang();
+        });
+      });
+
+      // --- Ficha compartida ---
+
+      var template = document.getElementById('info');
+      document.querySelectorAll('[data-info]').forEach(function (slot) {
+        slot.appendChild(template.content.cloneNode(true));
+      });
+
+      // --- Una sola instancia de la app: en el marco o a pantalla completa ---
+
+      var mobileQuery = window.matchMedia('(max-width: 760px), (max-height: 560px)');
+      var desktopFrame = document.getElementById('desktop-app');
+      var mobileFrame = document.getElementById('mobile-app');
+
+      function mountApp() {
+        var active = mobileQuery.matches ? mobileFrame : desktopFrame;
+        var inactive = mobileQuery.matches ? desktopFrame : mobileFrame;
+        if (inactive.getAttribute('src')) inactive.removeAttribute('src');
+        if (!active.getAttribute('src')) active.setAttribute('src', APP_URL);
+      }
+
+      mountApp();
+      mobileQuery.addEventListener('change', mountApp);
+
+      // --- Hoja de información (móvil): se muestra una vez por sesión ---
+
+      var sheet = document.querySelector('.sheet');
+      var backdrop = document.querySelector('.sheet-backdrop');
+
+      function setSheet(open) {
+        sheet.classList.toggle('open', open);
+        backdrop.classList.toggle('open', open);
+      }
+
+      document.querySelectorAll('[data-open-sheet]').forEach(function (el) {
+        el.addEventListener('click', function () { setSheet(true); });
+      });
+      document.querySelectorAll('[data-close-sheet]').forEach(function (el) {
+        el.addEventListener('click', function () { setSheet(false); });
+      });
+
+      if (mobileQuery.matches) {
+        var seen = false;
+        try { seen = sessionStorage.getItem('blockfall-demo-sheet') === '1'; } catch (e) {}
+        if (!seen) {
+          setSheet(true);
+          try { sessionStorage.setItem('blockfall-demo-sheet', '1'); } catch (e) {}
+        }
+      }
+
+      applyLang();
+    })();
+  </script>
+</body>
+</html>

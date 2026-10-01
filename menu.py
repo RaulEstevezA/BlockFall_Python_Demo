@@ -1,101 +1,77 @@
 import pygame
-from settings import WINDOW_WIDTH, WINDOW_HEIGHT, WHITE, CONTROLS
+from settings import (
+    WINDOW_WIDTH, WINDOW_HEIGHT, WHITE, LIGHT_GRAY, YELLOW, RED, COLORS, IS_WEB, get_font
+)
+
+# acciones configurables y su descripcion en pantalla
+CONFIGURABLE_ACTIONS = ["left", "right", "down", "drop", "rotate"]
+ACTION_DESCRIPTIONS = ["mover izquierda", "mover derecha", "bajar", "caida rapida", "rotar"]
+
+
+def _blit_centered(screen, text, size, color, y):
+    """dibuja un texto centrado horizontalmente"""
+    surface = get_font(size).render(text, True, color)
+    screen.blit(surface, ((WINDOW_WIDTH - surface.get_width()) // 2, y))
+
+
+def draw_top_bar(screen):
+    """dibuja el titulo del juego en la barra superior"""
+    title = get_font(48).render("BLOCKFALL", True, WHITE)
+    screen.blit(title, (20, 24))
 
 
 def show_menu(screen):
     """muestra el menu principal centrado en la pantalla"""
-    screen.fill((0, 0, 0))
-    font = pygame.font.Font(None, 48)
+    # fila de bloques de colores como decoracion del titulo
+    block = 30
+    start_x = (WINDOW_WIDTH - len(COLORS) * block) // 2
+    for i, color in enumerate(COLORS):
+        pygame.draw.rect(screen, color, (start_x + i * block, 170, block - 2, block - 2))
 
-    title = font.render("TETRIS", True, WHITE)
-    start_text = font.render("presiona ENTER para jugar", True, WHITE)
-    controls_text = font.render("presiona C para configurar controles", True, WHITE)
-    exit_text = font.render("presiona ESC para salir", True, WHITE)
+    _blit_centered(screen, "BLOCKFALL", 96, WHITE, 230)
 
-    title_x = (WINDOW_WIDTH - title.get_width()) // 2
-    title_y = (WINDOW_HEIGHT // 4)
+    _blit_centered(screen, "presiona ENTER o toca", 36, WHITE, 400)
+    _blit_centered(screen, "la pantalla para jugar", 36, WHITE, 436)
 
-    start_x = (WINDOW_WIDTH - start_text.get_width()) // 2
-    start_y = (WINDOW_HEIGHT // 2)
+    _blit_centered(screen, "teclado: flechas para mover y rotar", 28, LIGHT_GRAY, 560)
+    _blit_centered(screen, "ESPACIO caida rapida, ESC pausa", 28, LIGHT_GRAY, 592)
+    _blit_centered(screen, "movil: botones bajo el tablero", 28, LIGHT_GRAY, 624)
 
-    controls_x = (WINDOW_WIDTH - controls_text.get_width()) // 2
-    controls_y = start_y + 50
-
-    exit_x = (WINDOW_WIDTH - exit_text.get_width()) // 2
-    exit_y = controls_y + 50
-
-    screen.blit(title, (title_x, title_y))
-    screen.blit(start_text, (start_x, start_y))
-    screen.blit(controls_text, (controls_x, controls_y))
-    screen.blit(exit_text, (exit_x, exit_y))
-
-    pygame.display.flip()
+    _blit_centered(screen, "presiona C para configurar controles", 28, LIGHT_GRAY, 720)
+    if not IS_WEB:
+        _blit_centered(screen, "presiona ESC para salir", 28, LIGHT_GRAY, 752)
 
 
 def show_pause_menu(screen):
     """muestra el menu de pausa"""
-    screen.fill((0, 0, 0))
-    font = pygame.font.Font(None, 48)
-    pause_text = font.render("PAUSA", True, (255, 255, 0))
-    resume_text = font.render("presiona ESC para continuar", True, (255, 255, 255))
-
-    pause_x = (WINDOW_WIDTH - pause_text.get_width()) // 2
-    pause_y = (WINDOW_HEIGHT // 3)
-
-    resume_x = (WINDOW_WIDTH - resume_text.get_width()) // 2
-    resume_y = pause_y + 100
-
-    screen.blit(pause_text, (pause_x, pause_y))
-    screen.blit(resume_text, (resume_x, resume_y))
-
-    pygame.display.flip()
+    _blit_centered(screen, "PAUSA", 72, YELLOW, WINDOW_HEIGHT // 3)
+    _blit_centered(screen, "presiona ESC o toca", 36, WHITE, WINDOW_HEIGHT // 3 + 100)
+    _blit_centered(screen, "la pantalla para continuar", 36, WHITE, WINDOW_HEIGHT // 3 + 136)
 
 
-def show_game_over(screen):
-    """muestra la pantalla de game over centrada"""
-    screen.fill((0, 0, 0))
-    font = pygame.font.Font(None, 72)
-    sub_font = pygame.font.Font(None, 36)
-
-    game_over_text = font.render("GAME OVER", True, (255, 0, 0))
-    restart_text = sub_font.render("presiona ENTER para volver al menu", True, (255, 255, 255))
-
-    game_over_x = (WINDOW_WIDTH - game_over_text.get_width()) // 2
-    game_over_y = (WINDOW_HEIGHT // 3)
-
-    restart_x = (WINDOW_WIDTH - restart_text.get_width()) // 2
-    restart_y = game_over_y + 100
-
-    screen.blit(game_over_text, (game_over_x, game_over_y))
-    screen.blit(restart_text, (restart_x, restart_y))
-
-    pygame.display.flip()
+def show_game_over(screen, score):
+    """muestra la pantalla de game over con la puntuacion final"""
+    _blit_centered(screen, "GAME OVER", 80, RED, WINDOW_HEIGHT // 3)
+    _blit_centered(screen, f"Final Score: {score:08d}", 44, WHITE, WINDOW_HEIGHT // 3 + 90)
+    _blit_centered(screen, "presiona ENTER o toca", 32, LIGHT_GRAY, WINDOW_HEIGHT // 3 + 190)
+    _blit_centered(screen, "la pantalla para volver al menu", 32, LIGHT_GRAY, WINDOW_HEIGHT // 3 + 222)
 
 
-def configure_controls(screen):
-    """permite al usuario cambiar las teclas de movimiento y devuelve el diccionario actualizado"""
-    screen.fill((0, 0, 0))
-    font = pygame.font.Font(None, 36)
+def show_configure_controls(screen, new_controls):
+    """muestra las teclas ya elegidas y la accion que espera una tecla nueva"""
+    _blit_centered(screen, "presiona la nueva tecla", 40, WHITE, 120)
+    _blit_centered(screen, "para cada accion", 40, WHITE, 160)
 
-    text = font.render("presiona la nueva tecla para cada accion", True, WHITE)
-    screen.blit(text, ((WINDOW_WIDTH - text.get_width()) // 2, 50))
+    for i, action in enumerate(CONFIGURABLE_ACTIONS):
+        if action in new_controls:
+            text = f"{ACTION_DESCRIPTIONS[i]}: {pygame.key.name(new_controls[action])}"
+            color = LIGHT_GRAY
+        elif i == len(new_controls):
+            text = f"{ACTION_DESCRIPTIONS[i]}: presiona una tecla"
+            color = YELLOW
+        else:
+            text = ACTION_DESCRIPTIONS[i]
+            color = LIGHT_GRAY
+        screen.blit(get_font(34).render(text, True, color), (50, 260 + i * 50))
 
-    actions = ["left", "right", "down", "drop", "rotate"]
-    descriptions = ["mover izquierda", "mover derecha", "bajar", "caida rapida", "rotar"]
-
-    new_controls = {}
-
-    for i, action in enumerate(actions):
-        prompt = font.render(f"{descriptions[i]}: presiona una tecla", True, WHITE)
-        screen.blit(prompt, (50, 150 + i * 50))
-        pygame.display.flip()
-
-        waiting = True
-        while waiting:
-            for event in pygame.event.get():
-                if event.type == pygame.KEYDOWN:
-                    if event.key != pygame.K_ESCAPE:  # prevenir ESC como tecla configurable
-                        new_controls[action] = event.key
-                        waiting = False
-
-    return new_controls
+    _blit_centered(screen, "ESC para cancelar", 28, LIGHT_GRAY, 560)

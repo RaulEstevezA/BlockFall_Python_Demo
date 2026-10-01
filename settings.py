@@ -1,33 +1,48 @@
 # settings.py
 
+import sys
+from functools import lru_cache
+
 import pygame
 
-# tamanio de la pantalla
-WIDTH = 300
-HEIGHT = 600
+# True cuando el juego se ejecuta en el navegador (pygbag / WebAssembly)
+IS_WEB = sys.platform == "emscripten"
 
-# margenes para centrar el tablero
-MARGIN_LEFT = 500  # espacio a la izquierda
-MARGIN_TOP = 100    # espacio arriba
-
-# espacio adicional en la ventana
-WINDOW_WIDTH = MARGIN_LEFT + WIDTH + 500 
-WINDOW_HEIGHT = MARGIN_TOP + HEIGHT + 100  
+# tamanio de la ventana: formato vertical de movil (9:16)
+WINDOW_WIDTH = 540
+WINDOW_HEIGHT = 960
 
 # tamanio de cada celda en la cuadricula
-GRID_SIZE = 30  
+GRID_SIZE = 30
+
+# columnas del tablero
+COLUMNS = 10
+
+# numero de filas en el tablero
+ROWS = 20
+
+# tamanio del tablero
+WIDTH = COLUMNS * GRID_SIZE
+HEIGHT = ROWS * GRID_SIZE
+
+# posicion del tablero (deja hueco para la pared izquierda)
+MARGIN_LEFT = 50
+MARGIN_TOP = 80
+
+# panel lateral (siguiente pieza, nivel y puntuacion)
+PANEL_X = MARGIN_LEFT + WIDTH + GRID_SIZE + 15
+PANEL_WIDTH = WINDOW_WIDTH - PANEL_X - 15
+
+# zona de los botones tactiles, debajo del tablero
+CONTROLS_TOP = MARGIN_TOP + HEIGHT + GRID_SIZE + 20
 
 # colores
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 GRAY = (50, 50, 50)
 LIGHT_GRAY = (180, 180, 180)
-
-# columnas del tetris
-COLUMNS = 10 
-
-# numero de filas en el tablero de tetris
-ROWS = 20  
+YELLOW = (255, 255, 0)
+RED = (255, 0, 0)
 
 # lista de colores para las piezas
 COLORS = [
@@ -48,8 +63,11 @@ DEFAULT_CONTROLS = {
     "rotate": pygame.K_UP
 }
 
+# acciones que se repiten al mantener pulsada la tecla o el boton
+REPEATABLE_ACTIONS = ("left", "right", "down")
+
 # milisegundos antes de repetir
-KEY_REPEAT_DELAY = 300  
+KEY_REPEAT_DELAY = 300
 
 # intervalo de repeticion
 KEY_REPEAT_RATE = 20
@@ -95,3 +113,8 @@ def calculate_score(lines_cleared, level):
     level_coefficient = LEVEL_COEFFICIENTS.get(level, 1)
     base_score = 10 * lines_cleared
     return int(base_score * line_coefficient * level_coefficient)
+
+# fuentes cacheadas: crear una fuente en cada fotograma es lento en el navegador
+@lru_cache(maxsize=None)
+def get_font(size):
+    return pygame.font.Font(None, size)

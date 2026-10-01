@@ -27,8 +27,9 @@ class Piece:
         """Dibuja la pieza en la pantalla con los márgenes aplicados"""
         for i, row in enumerate(self.shape):
             for j, cell in enumerate(row):
-                if cell:
-                    pygame.draw.rect(screen, self.color, 
+                # las filas por encima del tablero no se dibujan
+                if cell and self.y + i >= 0:
+                    pygame.draw.rect(screen, self.color,
                                      (MARGIN_LEFT + (self.x + j) * GRID_SIZE, 
                                       MARGIN_TOP + (self.y + i) * GRID_SIZE, 
                                       GRID_SIZE, GRID_SIZE))

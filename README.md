@@ -1,111 +1,34 @@
-# Tetris Game (Python Edition)
+# BlockFall · Web Demo
 
-[![Watch the demo on YouTube](https://img.youtube.com/vi/EJYO5XpEWvg/0.jpg)](https://youtu.be/EJYO5XpEWvg)
+> [!IMPORTANT]
+> **This is not the main repository of the game.**
+> This repository only contains the **web demo** published on my website.
+> The original desktop game (source code, gameplay video and instructions to run it) lives here:
+>
+> **[RaulEstevezA/tetrisInPython](https://github.com/RaulEstevezA/tetrisInPython)**
 
-## Inspiration
+**Live demo:** [raulesteveza.github.io/demos/BlockFall_Python](https://raulesteveza.github.io/demos/BlockFall_Python/)
 
-The other day, I was watching the movie *Tetris* (2023), which tells the fascinating story behind the discovery of the game and the challenges of obtaining its licensing rights. After finishing the film, I felt the urge to play a classic Tetris game.
+- 🇬🇧 **English:** [About this demo repository](./README_en.md)
+- 🇪🇸 **Español:** [Sobre este repositorio de demo](./README_es.md)
 
-I started searching for a legal version online, but most of the ones I found were modern remakes. I really wanted to play the original, classic version. After some time browsing, I thought to myself, *"I'm a programmer, why not build my own Tetris?"* So I opened my laptop, launched Visual Studio Code, and started coding.
+<p align="center">
+  <a href="https://raulesteveza.github.io/demos/BlockFall_Python/">
+    <img src="docs/images/web_demo.png" alt="BlockFall web demo running inside a macOS window" width="720">
+  </a>
+</p>
 
-I chose **Python** for this project since it's the language I’m most comfortable with. Here's how it came together!
+## What is this repository?
 
-## Technologies Used
+A copy of my Python falling blocks game adapted to run **in the browser, on GitHub Pages**:
 
-- **Python 3.12.6** – Main programming language.
-- **Pygame 2.6.1** – For rendering graphics, handling events, and managing game loops.
-- **PyInstaller** – To package the game into a standalone executable.
-- **Blackhole (macOS)** – To record in-game audio during development.
-- **VSCode** – The primary code editor.
+- The Pygame code is compiled to **WebAssembly with [pygbag](https://pygame-web.github.io/)**: it is the same Python game, not a rewrite.
+- New **portrait layout with on-screen buttons**, so it can be played on a phone. On desktop it is shown inside a **macOS window** and is played with the keyboard.
+- Every push to `main` is **tested, built and deployed automatically** to my website with GitHub Actions.
 
-## Challenges Faced
+## Developer
 
-- **Key Repeat Logic:** Implementing smooth and responsive key hold functionality for moving and dropping pieces took several iterations to perfect.
-- **Scoring System:** Designing a balanced scoring mechanism that factors in both the number of cleared lines and the current level.
-- **Instant Drop Feature:** Implementing a "hard drop" that allows the piece to instantly fall to the bottom and lock in place.
-- **Game Packaging:** Creating a working `.exe` (and `.app` for macOS) using PyInstaller while ensuring all dependencies, like music and assets, were bundled correctly.
+**Raul Estevez**
 
-## How to Play
-
-### Objective
-
-Clear as many lines as possible by completing horizontal rows without gaps. The game speeds up as you level up, increasing the challenge.
-
-### Controls
-
-| Action             | Default Key |
-|--------------------|-------------|
-| Move Left          | Left Arrow  |
-| Move Right         | Right Arrow |
-| Soft Drop          | Down Arrow  |
-| Hard Drop          | Spacebar    |
-| Rotate Piece       | Up Arrow    |
-| Pause Game         | Esc         |
-| Configure Controls | C (in Menu) |
-| Start Game         | Enter       |
-
-*Note:* You can reconfigure movement keys in the menu.
-
-### Scoring
-
-The scoring system is based on a combination of lines cleared, level multipliers, and bonus coefficients:
-
-- **Base Formula:** `(10 × number of lines) × (line coefficient × level multiplier)`
-
-- **Line Clear Coefficients:**
-  - 1 line → ×1.0
-  - 2 lines → ×1.2
-  - 3 lines → ×1.6
-  - 4 lines (Tetris) → ×2.0
-
-- **Level Multipliers:**
-  - Level 1 → ×1.0
-  - Level 2 → ×1.1
-  - Level 3 → ×1.2
-  - … up to Level 10 → ×2.0
-
-You need **300 points** to advance to the next level.
-
-## How to Run
-
-### Run from Source
-
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/RaulEstevezA/tetrisInPython.git
-   cd tetrisInPython
-   ```
-
-2. **Install Dependencies:**
-   ```bash
-   pip install pygame
-   ```
-
-3. **Run the Game:**
-   ```bash
-   python tetris.py
-   ```
-
-## Audio & Music
-
-- The game includes a background track inspired by classic Tetris tunes.
-- Music playback is handled using Pygame's mixer.
-- Volume is set to 60% by default but can be adjusted in the source.
-
-## Demo Video
-
-Check out the gameplay demo on [YouTube](https://youtu.be/EJYO5XpEWvg) to see it in action!
-
-## License
-
-This project is for educational and personal use.  
-Inspired by the original **Tetris** game concept, but all code here is original.
-
-## Final Thoughts
-
-This project was a fun dive into game development using Python. It helped me sharpen my skills with Pygame, understand game loop logic, and tackle challenges like input handling, scoring systems, and packaging for distribution.
-
-If you enjoy it, feel free to leave feedback or suggest improvements. Happy stacking!
-
- **Thanks for playing!** 
-
+- [Personal Website](https://raulesteveza.github.io/)
+- [LinkedIn Profile](https://www.linkedin.com/in/raulesteveza/)
