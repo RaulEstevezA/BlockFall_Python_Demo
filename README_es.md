@@ -5,7 +5,7 @@
 > Aquí solo está la **versión de demostración web** que se publica en mi web.
 > El juego original de escritorio (código fuente, vídeo de la partida e instrucciones para ejecutarlo) está en:
 >
-> **[RaulEstevezA/tetrisInPython](https://github.com/RaulEstevezA/tetrisInPython)**
+> **[RaulEstevezA/BlockFall_Python](https://github.com/RaulEstevezA/BlockFall_Python)**
 
 **Demo en vivo:** [raulesteveza.github.io/demos/BlockFall_Python](https://raulesteveza.github.io/demos/BlockFall_Python/)
 
@@ -27,13 +27,12 @@ En el ordenador, la demo se muestra dentro de una ventana de macOS y se juega co
 
 ## Diferencias con el juego original
 
-| | Juego original ([tetrisInPython](https://github.com/RaulEstevezA/tetrisInPython)) | Esta demo |
+| | Juego original ([BlockFall_Python](https://github.com/RaulEstevezA/BlockFall_Python)) | Esta demo |
 |---|---|---|
 | Plataforma | Escritorio (Windows / macOS) | Navegador (escritorio y móvil) |
 | Ventana | Horizontal, 1300 × 800 | Vertical, 540 × 960 (formato móvil) |
 | Controles | Teclado | Teclado, ratón y botones táctiles |
 | Bucle principal | Síncrono, con bucles de espera en game over y configuración | Asíncrono (`asyncio`), sin bucles bloqueantes, como exige pygbag |
-| Música | Grabación sacada de un vídeo | Korobeiniki sintetizada desde cero con [`tool/generate_music.py`](tool/generate_music.py) |
 | Biblioteca | `pygame` | `pygame-ce` (la que usa pygbag); el código funciona con ambas |
 
 ### Cambios en el código

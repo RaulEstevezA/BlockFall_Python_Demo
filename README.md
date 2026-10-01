@@ -5,7 +5,7 @@
 > This repository only contains the **web demo** published on my website.
 > The original desktop game (source code, gameplay video and instructions to run it) lives here:
 >
-> **[RaulEstevezA/tetrisInPython](https://github.com/RaulEstevezA/tetrisInPython)**
+> **[RaulEstevezA/BlockFall_Python](https://github.com/RaulEstevezA/BlockFall_Python)**
 
 **Live demo:** [raulesteveza.github.io/demos/BlockFall_Python](https://raulesteveza.github.io/demos/BlockFall_Python/)
 

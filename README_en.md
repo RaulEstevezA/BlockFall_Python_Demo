@@ -5,7 +5,7 @@
 > This repository only contains the **web demo** published on my website.
 > The original desktop game (source code, gameplay video and instructions to run it) lives here:
 >
-> **[RaulEstevezA/tetrisInPython](https://github.com/RaulEstevezA/tetrisInPython)**
+> **[RaulEstevezA/BlockFall_Python](https://github.com/RaulEstevezA/BlockFall_Python)**
 
 **Live demo:** [raulesteveza.github.io/demos/BlockFall_Python](https://raulesteveza.github.io/demos/BlockFall_Python/)
 
@@ -27,13 +27,12 @@ On a computer the demo is shown inside a macOS window and played with the keyboa
 
 ## Differences from the original game
 
-| | Original game ([tetrisInPython](https://github.com/RaulEstevezA/tetrisInPython)) | This demo |
+| | Original game ([BlockFall_Python](https://github.com/RaulEstevezA/BlockFall_Python)) | This demo |
 |---|---|---|
 | Platform | Desktop (Windows / macOS) | Browser (desktop and mobile) |
 | Window | Landscape, 1300 × 800 | Portrait, 540 × 960 (phone format) |
 | Controls | Keyboard | Keyboard, mouse and touch buttons |
 | Main loop | Synchronous, with blocking loops on game over and key setup | Asynchronous (`asyncio`), no blocking loops, as pygbag requires |
-| Music | Recording taken from a video | Korobeiniki synthesized from scratch with [`tool/generate_music.py`](tool/generate_music.py) |
 | Library | `pygame` | `pygame-ce` (the one pygbag uses); the code works with both |
 
 ### Code changes
