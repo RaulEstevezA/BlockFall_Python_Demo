@@ -91,17 +91,13 @@ class Board:
                 return True
         return False
 
-    def clear_full_rows(self, level):
-        """elimina las filas completas y calcula la puntuación basada en el nivel"""
+    def clear_full_rows(self):
+        """elimina las filas completas y devuelve cuantas se han eliminado"""
         new_grid = [row for row in self.grid if any(cell == 0 for cell in row)]
         lines_cleared = self.rows - len(new_grid)
-
-        points_earned = 0
-        if lines_cleared > 0:
-            points_earned = (10 + 10 * (lines_cleared - 1)) * level
 
         while len(new_grid) < self.rows:
             new_grid.insert(0, [0] * self.columns)
 
         self.grid = new_grid
-        return lines_cleared, points_earned
+        return lines_cleared

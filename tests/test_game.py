@@ -106,6 +106,17 @@ class GameTest(unittest.TestCase):
         self.assertEqual(self.game.score, 10)
         self.assertTrue(all(cell == 0 for cell in self.game.board.grid[-1]))
 
+    def test_level_up_every_ten_lines(self):
+        self.key(pygame.K_RETURN)
+        self.game.lines = 9
+        self.game.board.grid[-1] = [(1, 1, 1)] * 6 + [0] * 4
+        piece = Piece()
+        piece.shape, piece.x, piece.y = [[1, 1, 1, 1]], 6, 0
+        self.game.piece = piece
+        self.key(pygame.K_SPACE)
+        self.assertEqual(self.game.lines, 10)
+        self.assertEqual(self.game.level, 2)
+
     def test_rotate_button(self):
         self.tap((270, 480))
         piece = Piece()

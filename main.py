@@ -4,7 +4,7 @@ import sys
 import pygame
 
 from settings import (
-    WINDOW_WIDTH, WINDOW_HEIGHT, BLACK, CONTROLS, LEVEL_UP_SCORE, IS_WEB,
+    WINDOW_WIDTH, WINDOW_HEIGHT, BLACK, CONTROLS, LINES_PER_LEVEL, IS_WEB,
     REPEATABLE_ACTIONS, KEY_REPEAT_DELAY, KEY_REPEAT_RATE,
     calculate_drop_speed, calculate_score
 )
@@ -54,6 +54,7 @@ class Game:
         self.piece = Piece()
         self.next_piece = Piece()
         self.score = 0
+        self.lines = 0
         self.level = 1
         self.last_drop_time = pygame.time.get_ticks()
         self.held.clear()
@@ -102,13 +103,13 @@ class Game:
             self.end_game()
             return
 
-        lines_cleared, _ = self.board.clear_full_rows(self.level)
+        lines_cleared = self.board.clear_full_rows()
         if lines_cleared > 0:
             self.score += calculate_score(lines_cleared, self.level)
+            self.lines += lines_cleared
 
-        # subir de nivel
-        if self.score >= self.level * LEVEL_UP_SCORE:
-            self.level += 1
+        # subir de nivel cada LINES_PER_LEVEL lineas
+        self.level = 1 + self.lines // LINES_PER_LEVEL
 
         # nueva pieza
         self.piece = self.next_piece

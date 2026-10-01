@@ -78,8 +78,8 @@ CONTROLS = DEFAULT_CONTROLS.copy()
 # velocidad de caida de las piezas
 DROP_TIME = 1000
 
-# puntuacion necesaria para subir de nivel
-LEVEL_UP_SCORE = 300
+# lineas necesarias para subir de nivel
+LINES_PER_LEVEL = 10
 
 # coeficientes de puntuacion por lineas
 LINE_CLEAR_COEFFICIENTS = {
