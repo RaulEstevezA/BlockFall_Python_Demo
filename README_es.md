@@ -33,7 +33,7 @@ En el ordenador, la demo se muestra dentro de una ventana de macOS y se juega co
 | Ventana | Horizontal, 1300 × 800 | Vertical, 540 × 960 (formato móvil) |
 | Controles | Teclado | Teclado, ratón y botones táctiles |
 | Bucle principal | Síncrono, con bucles de espera en game over y configuración | Asíncrono (`asyncio`), sin bucles bloqueantes, como exige pygbag |
-| Música | MP3 | OGG (formato que reproducen todos los navegadores) |
+| Música | Grabación sacada de un vídeo | Korobeiniki sintetizada desde cero con [`tool/generate_music.py`](tool/generate_music.py) |
 | Biblioteca | `pygame` | `pygame-ce` (la que usa pygbag); el código funciona con ambas |
 
 ### Cambios en el código
@@ -43,6 +43,14 @@ En el ordenador, la demo se muestra dentro de una ventana de macOS y se juega co
 - **Caída rápida**: ahora fija la pieza al instante (antes se fijaba en el siguiente paso de la caída automática).
 - **Pausa automática** si se cambia de pestaña o de ventana.
 - La lógica del tablero, las piezas, la rotación y la puntuación es la misma del original.
+
+## Música
+
+La música de fondo es **Korobeiniki**, una canción popular rusa del siglo XIX y de dominio público. No usa ninguna grabación ni ningún arreglo de terceros: el sonido se genera desde cero con [`tool/generate_music.py`](tool/generate_music.py) (onda cuadrada para la melodía, triangular para el bajo y ruido para la percusión), usando solo la biblioteca estándar de Python.
+
+```bash
+python tool/generate_music.py   # regenera music/theme.ogg (necesita ffmpeg)
+```
 
 ## Controles
 
@@ -65,11 +73,12 @@ pieces.py               Piezas, movimiento y rotación
 controls.py             Botones táctiles
 menu.py                 Menú, pausa, game over y configuración de teclas
 settings.py             Tamaños, colores, controles y puntuación
-music/theme.ogg         Música de fondo
+music/theme.ogg         Música de fondo (generada)
 tests/                  Tests del juego sin ventana
 web/template.tmpl       Plantilla HTML de pygbag (pantalla de carga y estilos)
 web/favicon.png         Icono
 tool/build_web.sh       Compilación para web
+tool/generate_music.py  Generador de la música
 showcase/index.html     Página de presentación con la ventana de macOS
 .github/workflows/      Tests, compilación y despliegue automático
 ```

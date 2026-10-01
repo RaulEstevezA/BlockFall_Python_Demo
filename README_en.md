@@ -33,7 +33,7 @@ On a computer the demo is shown inside a macOS window and played with the keyboa
 | Window | Landscape, 1300 × 800 | Portrait, 540 × 960 (phone format) |
 | Controls | Keyboard | Keyboard, mouse and touch buttons |
 | Main loop | Synchronous, with blocking loops on game over and key setup | Asynchronous (`asyncio`), no blocking loops, as pygbag requires |
-| Music | MP3 | OGG (played by every browser) |
+| Music | Recording taken from a video | Korobeiniki synthesized from scratch with [`tool/generate_music.py`](tool/generate_music.py) |
 | Library | `pygame` | `pygame-ce` (the one pygbag uses); the code works with both |
 
 ### Code changes
@@ -43,6 +43,14 @@ On a computer the demo is shown inside a macOS window and played with the keyboa
 - **Hard drop** now locks the piece immediately (it used to lock on the next automatic drop step).
 - **Auto pause** when switching tabs or windows.
 - Board, pieces, rotation and scoring logic are the same as in the original.
+
+## Music
+
+The background music is **Korobeiniki**, a 19th-century Russian folk song in the public domain. No third-party recording or arrangement is used: the sound is generated from scratch by [`tool/generate_music.py`](tool/generate_music.py) (square wave for the melody, triangle wave for the bass and noise for percussion), using only the Python standard library.
+
+```bash
+python tool/generate_music.py   # regenerates music/theme.ogg (needs ffmpeg)
+```
 
 ## Controls
 
@@ -65,11 +73,12 @@ pieces.py               Pieces, movement and rotation
 controls.py             Touch buttons
 menu.py                 Menu, pause, game over and key setup
 settings.py             Sizes, colours, controls and scoring
-music/theme.ogg         Background music
+music/theme.ogg         Background music (generated)
 tests/                  Headless game tests
 web/template.tmpl       pygbag HTML template (loading screen and styles)
 web/favicon.png         Icon
 tool/build_web.sh       Web build
+tool/generate_music.py  Music generator
 showcase/index.html     Presentation page with the macOS window
 .github/workflows/      Automatic tests, build and deployment
 ```
