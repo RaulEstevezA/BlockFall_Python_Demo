@@ -139,7 +139,7 @@
     /* BlockFall es un juego de escritorio: en el ordenador se muestra dentro de
        una ventana de macOS (modo oscuro) en vez de en un marco de móvil. */
     /* La columna toma el ancho de la ventana; la ayuda se ajusta a ese ancho. */
-    .app-column { width: min-content; align-self: start; }
+    .app-column { width: min-content; }
 
     .mac-window {
       border-radius: 11px;
@@ -174,10 +174,11 @@
     .traffic .minimize { background: #febc2e; }
     .traffic .zoom     { background: #28c840; }
 
-    /* El juego es vertical (540 × 960): la ventana toma la altura disponible y
-       pygbag ajusta el lienzo al tamaño del iframe. */
+    /* El juego es vertical (540 × 960). La ventana tiene el mismo ancho que el
+       marco del móvil de las otras demos (390 / 844 de la altura disponible),
+       para que la ficha mida lo mismo; pygbag ajusta el lienzo al iframe. */
     .screen {
-      height: min(860px, calc(100dvh - 11rem));
+      width: min(390px, calc((100dvh - 10rem) * 390 / 844));
       aspect-ratio: 540 / 960;
       background: #000;
     }
@@ -269,7 +270,7 @@
           <iframe id="desktop-app" title="BlockFall" loading="eager" allow="autoplay; fullscreen"></iframe>
         </div>
       </div>
-      <p class="hint" data-i18n="hint">Haz clic en el juego y usa las flechas, Espacio y Esc. También puedes pulsar los botones con el ratón.</p>
+      <p class="hint" data-i18n="hint">Haz clic y juega con las flechas, Espacio y Esc.</p>
     </div>
   </main>
 
@@ -301,10 +302,9 @@
     </div>
 
     <p class="intro" data-i18n="intro">
-      Juego clásico de bloques que caen, programado desde cero con Pygame:
-      rotación con ajuste a las paredes, caída rápida, niveles que aceleran el
-      juego y puntuación según las líneas completadas. Es el mismo código Python
-      del juego de escritorio, ejecutándose en el navegador.
+      Juego clásico de bloques que caen, hecho desde cero con Pygame: rotación
+      con ajuste a las paredes, caída rápida y niveles que aceleran. Es el mismo
+      código Python del juego de escritorio, ejecutándose en el navegador.
     </p>
 
     <div class="notice">
@@ -329,9 +329,9 @@
 
       var texts = {
         es: {
-          hint: 'Haz clic en el juego y usa las flechas, Espacio y Esc. También puedes pulsar los botones con el ratón.',
+          hint: 'Haz clic y juega con las flechas, Espacio y Esc.',
           subtitle: 'Juego de bloques que caen, en Python',
-          intro: 'Juego clásico de bloques que caen, programado desde cero con Pygame: rotación con ajuste a las paredes, caída rápida, niveles que aceleran el juego y puntuación según las líneas completadas. Es el mismo código Python del juego de escritorio, ejecutándose en el navegador.',
+          intro: 'Juego clásico de bloques que caen, hecho desde cero con Pygame: rotación con ajuste a las paredes, caída rápida y niveles que aceleran. Es el mismo código Python del juego de escritorio, ejecutándose en el navegador.',
           notice_title: 'Versión web del juego',
           notice_wasm: 'El juego se compila a WebAssembly con pygbag: la primera carga descarga el intérprete de Python y puede tardar unos segundos.',
           notice_tap: 'Toca o haz clic en el juego para empezar; el navegador necesita ese gesto para activar la música.',
@@ -342,9 +342,9 @@
           view_demo: 'Jugar'
         },
         en: {
-          hint: 'Click the game and use the arrow keys, Space and Esc. You can also press the on-screen buttons with the mouse.',
+          hint: 'Click, then play with the arrows, Space and Esc.',
           subtitle: 'Falling blocks game, in Python',
-          intro: 'Classic falling blocks game built from scratch with Pygame: rotation with wall kicks, hard drop, levels that speed the game up and scoring based on cleared lines. It is the same Python code as the desktop game, running in the browser.',
+          intro: 'Classic falling blocks game built from scratch with Pygame: rotation with wall kicks, hard drop and levels that speed up. It is the same Python code as the desktop game, running in the browser.',
           notice_title: 'Web version of the game',
           notice_wasm: 'The game is compiled to WebAssembly with pygbag: the first load downloads the Python interpreter and may take a few seconds.',
           notice_tap: 'Tap or click the game to start; the browser needs that gesture to enable the music.',
