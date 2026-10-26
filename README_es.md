@@ -118,18 +118,6 @@ python3 -m http.server 8000 --directory /tmp/site
 # Abrir http://127.0.0.1:8000/demos/BlockFall_Python/
 ```
 
-## Despliegue
-
-El workflow [`deploy-demo.yml`](.github/workflows/deploy-demo.yml) se ejecuta en cada push a `main` (y manualmente desde Actions):
-
-1. Ejecuta los tests.
-2. Compila el juego para web con pygbag.
-3. Copia `showcase/` y el juego compilado en `demos/BlockFall_Python/` del repositorio [RaulEstevezA.github.io](https://github.com/RaulEstevezA/RaulEstevezA.github.io), que GitHub Pages publica.
-
-Necesita el secreto de Actions `PORTFOLIO_DEPLOY_TOKEN`: un token *fine-grained* con permiso **Contents: Read and write** solo sobre `RaulEstevezA.github.io`.
-
-La carpeta `demos/BlockFall_Python/` de la web se sustituye entera en cada despliegue, así que no debe editarse a mano.
-
 ## Desarrollador
 
 **Raul Estevez**
