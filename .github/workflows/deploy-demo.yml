@@ -1,10 +1,10 @@
-# Compila el juego para web y lo publica en la sección de demos de la web
-# personal: https://raulesteveza.github.io/demos/BlockFall_Python/
+# Compila el juego para web y lo publica en la sección de juegos de la web
+# personal: https://raulesteveza.github.io/games/BlockFall_Python/
 #
 # Se publica en el repositorio RaulEstevezA/RaulEstevezA.github.io, que GitHub
 # Pages sirve al recibir el push:
-#   demos/BlockFall_Python/       ← showcase/ (página con la ventana de macOS)
-#   demos/BlockFall_Python/app/   ← el juego compilado con pygbag
+#   games/BlockFall_Python/       ← showcase/ (página con la ventana de macOS)
+#   games/BlockFall_Python/app/   ← el juego compilado con pygbag
 #
 # Mismo mecanismo que el resto de demos: un token con permiso de escritura
 # (Contents: Read and write) sobre RaulEstevezA.github.io, guardado en este
@@ -33,7 +33,7 @@ concurrency:
 env:
   PYTHON_VERSION: '3.12'
   SITE_REPOSITORY: RaulEstevezA/RaulEstevezA.github.io
-  DEMO_PATH: demos/BlockFall_Python
+  DEMO_PATH: games/BlockFall_Python
 
 jobs:
   deploy:

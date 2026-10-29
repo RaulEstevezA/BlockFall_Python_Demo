@@ -7,13 +7,13 @@
 >
 > **[RaulEstevezA/BlockFall_Python](https://github.com/RaulEstevezA/BlockFall_Python)**
 
-**Live demo:** [raulesteveza.github.io/demos/BlockFall_Python](https://raulesteveza.github.io/demos/BlockFall_Python/)
+**Live demo:** [raulesteveza.github.io/games/BlockFall_Python](https://raulesteveza.github.io/games/BlockFall_Python/)
 
 - 🇬🇧 **English:** [About this demo repository](./README_en.md)
 - 🇪🇸 **Español:** [Sobre este repositorio de demo](./README_es.md)
 
 <p align="center">
-  <a href="https://raulesteveza.github.io/demos/BlockFall_Python/">
+  <a href="https://raulesteveza.github.io/games/BlockFall_Python/">
     <img src="docs/images/web_demo.png" alt="BlockFall web demo running inside a macOS window" width="720">
   </a>
 </p>

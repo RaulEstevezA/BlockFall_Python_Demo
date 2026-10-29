@@ -7,10 +7,10 @@
 >
 > **[RaulEstevezA/BlockFall_Python](https://github.com/RaulEstevezA/BlockFall_Python)**
 
-**Demo en vivo:** [raulesteveza.github.io/demos/BlockFall_Python](https://raulesteveza.github.io/demos/BlockFall_Python/)
+**Demo en vivo:** [raulesteveza.github.io/games/BlockFall_Python](https://raulesteveza.github.io/games/BlockFall_Python/)
 
 <p align="center">
-  <a href="https://raulesteveza.github.io/demos/BlockFall_Python/">
+  <a href="https://raulesteveza.github.io/games/BlockFall_Python/">
     <img src="docs/images/web_demo.png" alt="Demo web de BlockFall dentro de una ventana de macOS" width="720">
   </a>
 </p>
@@ -111,11 +111,11 @@ Para verlo exactamente como queda publicado (página con la ventana de macOS y e
 
 ```bash
 ./tool/build_web.sh
-mkdir -p /tmp/site/demos/BlockFall_Python
-cp -R showcase/. /tmp/site/demos/BlockFall_Python/
-cp -R build/blockfall/build/web /tmp/site/demos/BlockFall_Python/app
+mkdir -p /tmp/site/games/BlockFall_Python
+cp -R showcase/. /tmp/site/games/BlockFall_Python/
+cp -R build/blockfall/build/web /tmp/site/games/BlockFall_Python/app
 python3 -m http.server 8000 --directory /tmp/site
-# Abrir http://127.0.0.1:8000/demos/BlockFall_Python/
+# Abrir http://127.0.0.1:8000/games/BlockFall_Python/
 ```
 
 ## Desarrollador
