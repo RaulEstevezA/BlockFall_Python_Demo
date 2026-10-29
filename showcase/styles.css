@@ -75,8 +75,14 @@ a { color: var(--accent); }
   padding: 1.75rem 2.25rem;
 }
 
+.game-heading { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+.game-logo {
+  width: 72px; height: 72px; flex: 0 0 72px;
+  object-fit: contain; image-rendering: pixelated;
+}
+
 h1 { font-size: 2.2rem; margin: 0 0 0.3rem; }
-h2 { font-size: 1.2rem; font-weight: 400; color: var(--muted); margin: 0 0 1rem; }
+h2 { font-size: 1.2rem; font-weight: 400; color: var(--muted); margin: 0; }
 
 .intro { margin: 0.75rem 0; line-height: 1.65; color: var(--muted); max-width: 560px; }
 
@@ -215,6 +221,8 @@ h2 { font-size: 1.2rem; font-weight: 400; color: var(--muted); margin: 0 0 1rem;
     opacity: 0; pointer-events: none; transition: opacity 0.25s ease;
   }
   .sheet-backdrop.open { opacity: 1; pointer-events: auto; }
+  .sheet .game-heading { gap: 0.8rem; }
+  .sheet .game-logo { width: 56px; height: 56px; flex-basis: 56px; }
   .sheet h1 { font-size: 1.6rem; }
   .sheet .grabber { width: 40px; height: 4px; border-radius: 2px; background: var(--border); margin: -0.25rem auto 1rem; }
   .sheet .actions .btn { flex: 1 1 auto; justify-content: center; }
